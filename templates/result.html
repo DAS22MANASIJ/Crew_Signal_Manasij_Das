@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+    <title>Result - CrewSignal</title>
+  </head>
+  <body>
+    <div class="container py-4">
+      <header class="hero p-4 mb-4 rounded text-white">
+        <div class="d-flex align-items-center">
+          <div class="flex-grow-1">
+            <h1 class="display-4 mb-0">CrewSignal</h1>
+            <p class="lead mb-0">Evaluation Result</p>
+          </div>
+        </div>
+      </header>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Astronaut: {{ astronaut_name }} ({{ astronaut_id }})</h5>
+          <p class="card-text">Age: {{ age }} | Sex: {{ sex }}</p>
+          <p class="card-text">Pulse: {{ pulse }} | Body Temp: {{ body_temperature }}°C | SpO2: {{ spo2 }}%</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Random Forest</h5>
+              <p class="card-text">Predicted Health Status: {{ rf_pred }}</p>
+              <p class="card-text">Probability (max class): {{ rf_conf }}</p>
+              <p class="card-text">Accuracy: {{ rf_metrics['accuracy'] }}</p>
+              <p class="card-text">Precision: {{ rf_metrics['precision'] }}</p>
+              <p class="card-text">Recall: {{ rf_metrics['recall'] }}</p>
+              <p class="card-text">F1-score: {{ rf_metrics['f1'] }}</p>
+              <p class="card-text">CV Score: {{ rf_cv }}</p>
+              <p class="card-text">Confusion Matrix: {{ rf_metrics['confusion_matrix'] }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">SVM</h5>
+              <p class="card-text">Predicted Health Status: {{ svm_pred }}</p>
+              <p class="card-text">Probability (max class): {{ svm_conf }}</p>
+              <p class="card-text">Decision function score: {{ svm_decision }}</p>
+              <p class="card-text">Accuracy: {{ svm_metrics['accuracy'] }}</p>
+              <p class="card-text">Precision: {{ svm_metrics['precision'] }}</p>
+              <p class="card-text">Recall: {{ svm_metrics['recall'] }}</p>
+              <p class="card-text">F1-score: {{ svm_metrics['f1'] }}</p>
+              <p class="card-text">CV Score: {{ svm_cv }}</p>
+              <p class="card-text">Confusion Matrix: {{ svm_metrics['confusion_matrix'] }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Rule-Based Recommendation</h5>
+          <p class="card-text">Overall Risk Category: {{ risk }}</p>
+          <p class="card-text">Recommended Next Step: {{ next_step }}</p>
+        </div>
+      </div>
+      <div class="alert alert-info">
+        Model Agreement: {{ 'Agree' if agreement else 'Disagree' }}
+      </div>
+      <a href="/" class="btn btn-secondary">Back</a>
+    </div>
+    <script>
+      var rf = "{{ rf_pred }}".trim();
+      var svm = "{{ svm_pred }}".trim();
+      if(rf.toLowerCase() === 'critical' && svm.toLowerCase() === 'critical'){
+          try{
+            var audio = new Audio('/static/emergency_voice.mp3');
+            audio.loop = true;
+            audio.volume = 0.9;
+            var playPromise = audio.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(function(error) {
+                var btn = document.createElement('button');
+                btn.className = 'btn btn-danger';
+                btn.textContent = 'Play Emergency Alert';
+                btn.onclick = function(){ audio.play(); btn.remove(); };
+                document.querySelector('.container').insertBefore(btn, document.querySelector('.container').firstChild);
+              });
+            }
+          }catch(e){
+            try{
+              var dataURI = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjE0LjEwNAAAAAAAAAAAAAA//tQxAADBzAADhZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==';
+              var audio2 = new Audio();
+              audio2.src = dataURI;
+              audio2.loop = true;
+              audio2.volume = 0.9;
+              audio2.play();
+            }catch(e2){
+            }
+          }
+      }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
