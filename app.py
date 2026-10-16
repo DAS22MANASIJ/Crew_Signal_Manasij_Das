@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, send_from_directory, abort
 import os
 import re
 import csv
@@ -364,6 +364,14 @@ def predict():
         risk=risk,
         next_step=next_step,
     )
+
+
+@app.route('/static/emergency_voice.mp3')
+def serve_emergency_voice():
+    try:
+        return send_from_directory(os.path.dirname(__file__), 'emergency_voice.mp3')
+    except Exception:
+        abort(404)
 
 
 if __name__ == '__main__':
