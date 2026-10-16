@@ -1,0 +1,29 @@
+body {
+  background: linear-gradient(135deg, #0f172a 0%, #0b3d91 50%, #1e3a8a 100%);
+  color: #eef2ff;
+  min-height: 100vh;
+}
+
+.hero {
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
+.form-control, .btn {
+  border-radius: 0.5rem;
+}
+
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.connect-item {
+  display: inline-block;
+  margin-right: 1rem;
+  font-weight: 600;
+}
+
+@media (max-width: 576px) {
+  .display-4 { font-size: 1.6rem }
+}
